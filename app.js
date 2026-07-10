@@ -115,8 +115,8 @@ let data = null;
 let currentDate = "";
 let expandedDates = [];
 let showNewDayForm = false;
-let selectedMedicalIngredientCategory = "meat";
-let selectedMedicalIngredientId = "beef";
+let selectedMedicalIngredientCategory = "";
+let selectedMedicalIngredientId = "";
 let selectedMealTemplateId = "";
 let visibleMealTemplateIds = [];
 let selectedCookingMethod = "light_stir_fry";
@@ -126,17 +126,18 @@ let medicalAdviceInputText = "";
 let parsedMedicalAdviceResults = [];
 let parsedMedicalAdviceMicroNotes = {};
 let parsedMedicalAdviceReminderUpdates = null;
+let parsedMedicalAdviceContext = null;
 let medicalAdviceParserHasRun = false;
 let isDatePickerOpen = false;
 let calendarViewYear = 2026;
 let calendarViewMonth = 5;
 let medicalDraft = {
-  ingredientWeight: "150",
+  ingredientWeight: "",
   sharedPeople: "2",
   userPortion: "1",
   eatAll: false,
   oilOption: "auto",
-  customOilGrams: "5"
+  customOilGrams: ""
 };
 
 let medicalArchiveState = {
@@ -810,6 +811,11 @@ function getDefaultMedicalDietProfile() {
       note: ""
     }])),
     doctorAdviceNote: "",
+    context: {
+      detectedContext: "",
+      detectedKeywords: [],
+      source: "user_advice_text"
+    },
     microNutrientNotes: {
       sodium: "",
       potassium: "",
@@ -925,6 +931,13 @@ function clearAnalytics() {
   localStorage.removeItem(ANALYTICS_KEY);
 }
 
+function clearLocalTestData() {
+  if (!confirm("确定要清空本地测试数据吗？此操作会删除本浏览器中的饮食记录和设置。")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(ANALYTICS_KEY);
+  window.location.reload();
+}
+
 function loadData() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -1028,10 +1041,16 @@ function normalizeMedicalDietProfile(profile) {
       note: saved.note || ""
     };
   });
+  const savedContext = source.context && typeof source.context === "object" ? source.context : {};
   return {
     enabled: Boolean(source.enabled),
     restrictions,
     doctorAdviceNote: source.doctorAdviceNote || "",
+    context: {
+      detectedContext: typeof savedContext.detectedContext === "string" ? savedContext.detectedContext : "",
+      detectedKeywords: Array.isArray(savedContext.detectedKeywords) ? savedContext.detectedKeywords.filter((item) => typeof item === "string") : [],
+      source: "user_advice_text"
+    },
     microNutrientNotes,
     kidneyReminders,
     extraReminders
@@ -1911,11 +1930,15 @@ function renderMedicalPublicBetaNotes() {
       <p class="entry-meta">当前版本：v0.3.0 public beta。公开测试版，仅用于功能体验和饮食估算流程测试。</p>
       <details>
         <summary>使用边界说明</summary>
-        <p class="hint">本工具仅根据你录入的医嘱限制进行饮食估算，不提供诊断、治疗或个体化营养处方。CKD 饮食限制需以医生或注册营养师建议为准。食材数据、菜品搭配和用油量均为估算值，实际摄入会因品牌、部位、熟重/生重、烹饪方式和份量差异而变化。</p>
+        <p class="hint">本工具仅根据你录入的医嘱限制进行饮食估算，不提供诊断、治疗或个体化营养处方。饮食限制需以医生或注册营养师建议为准。食材数据、菜品搭配和用油量均为估算值，实际摄入会因品牌、部位、熟重/生重、烹饪方式和份量差异而变化。</p>
       </details>
       <details>
         <summary>数据说明</summary>
         <p class="hint">食材营养数据为常见食材估算值。肉类默认按较常见家庭食用部位估算，牛肉默认按偏瘦牛肉估算；不同部位、品牌、熟重/生重、调味和烹饪方式会造成差异。用油量按烹饪方式默认估算，用户可以手动修改。钠、钾、磷、钙、限水、控糖、嘌呤等项目仅作为医嘱提醒，不生成自动饮食处方。</p>
+      </details>
+      <details>
+        <summary>本地数据管理</summary>
+        <button id="clearLocalTestDataBtn" class="ghost-btn small-btn" type="button">清空本地测试数据</button>
       </details>
     </div>
   `;
@@ -1942,7 +1965,7 @@ function renderMedicalReminderSettings(profile) {
           }).join("")}
         </div>
       </div>
-      <p class="hint">以下项目仅在医嘱或合并症需要时启用，不是所有 CKD 用户都需要管理。</p>
+        <p class="hint">以下项目仅在医嘱或合并症需要时启用，不是所有用户都需要管理。</p>
       <details class="extra-reminder-settings">
         <summary>更多提醒：钙 / 限水 / 控糖 / 嘌呤</summary>
         <div class="reminder-option-grid">
@@ -1979,6 +2002,7 @@ function bindMedicalDietSettings() {
     });
   }
   bindMedicalAdviceParser();
+  document.getElementById("clearLocalTestDataBtn")?.addEventListener("click", clearLocalTestData);
   const form = document.getElementById("medicalDietSettingsForm");
   if (!form) return;
   form.addEventListener("submit", (event) => {
@@ -1988,6 +2012,16 @@ function bindMedicalDietSettings() {
 }
 
 function renderMedicalSettingsSummary(profile) {
+  const hasRestrictions = mainMedicalNutrients.some((key) => profile.restrictions[key]?.status !== "none")
+    || Object.values(profile.kidneyReminders || {}).some((item) => item?.enabled)
+    || Object.values(profile.extraReminders || {}).some((item) => item?.enabled);
+  if (!hasRestrictions) {
+    return [
+      "尚未设置",
+      "更多提醒：未启用",
+      "可设置：钙 / 限水 / 控糖 / 嘌呤"
+    ].map((item) => `<p class="entry-meta">${escapeHTML(item)}</p>`).join("");
+  }
   const macroItems = mainMedicalNutrients.map((key) => {
     const restriction = profile.restrictions[key];
     const label = medicalNutrientConfig[key].label;
@@ -2042,6 +2076,7 @@ function bindMedicalAdviceParser() {
       parsedMedicalAdviceResults = parsedAdvice.nutrientResults;
       parsedMedicalAdviceMicroNotes = extractMicroNutrientNotes(medicalAdviceInputText);
       parsedMedicalAdviceReminderUpdates = parsedAdvice.reminderUpdates;
+      parsedMedicalAdviceContext = parsedAdvice.context;
       medicalAdviceParserHasRun = true;
       renderMedicalDietMode();
     });
@@ -2052,6 +2087,7 @@ function bindMedicalAdviceParser() {
       parsedMedicalAdviceResults = [];
       parsedMedicalAdviceMicroNotes = {};
       parsedMedicalAdviceReminderUpdates = null;
+      parsedMedicalAdviceContext = null;
       medicalAdviceInputText = "";
       medicalAdviceParserHasRun = false;
       renderMedicalDietMode();
@@ -2111,13 +2147,31 @@ function saveMedicalDietSettings(form) {
 
 function parseMedicalAdviceText(text) {
   const sourceText = String(text || "").trim();
-  if (!sourceText) return { nutrientResults: [], reminderUpdates: extractReminderUpdates("") };
+  if (!sourceText) return { nutrientResults: [], reminderUpdates: extractReminderUpdates(""), context: detectMedicalAdviceContext("") };
   const nutrientResults = mainMedicalNutrients.map((key) => [key, nutrientParseConfig[key]])
     .map(([key, config]) => extractNutrientRestriction(sourceText, { key, ...config }))
     .filter(Boolean);
   return {
     nutrientResults,
-    reminderUpdates: extractReminderUpdates(sourceText)
+    reminderUpdates: extractReminderUpdates(sourceText),
+    context: detectMedicalAdviceContext(sourceText)
+  };
+}
+
+function detectMedicalAdviceContext(text) {
+  const source = String(text || "");
+  const detectedKeywords = [];
+  if (/CKD|慢性肾病|肾病|肾脏|肾功能|尿蛋白/.test(source)) detectedKeywords.push("肾病相关");
+  if (/糖尿病|血糖|控糖|低糖|少糖|主食控制|碳水控制/.test(source)) detectedKeywords.push("控糖");
+  if (/高尿酸|尿酸|痛风|嘌呤/.test(source)) detectedKeywords.push("嘌呤 / 尿酸");
+  let detectedContext = "";
+  if (detectedKeywords.includes("肾病相关")) detectedContext = "肾病相关饮食提醒";
+  else if (detectedKeywords.includes("控糖")) detectedContext = "控糖提醒";
+  else if (detectedKeywords.includes("嘌呤 / 尿酸")) detectedContext = "嘌呤 / 尿酸提醒";
+  return {
+    detectedContext,
+    detectedKeywords,
+    source: "user_advice_text"
   };
 }
 
@@ -2198,12 +2252,14 @@ function renderParsedAdvicePreview(parsedResults, hasRun = true) {
   if (!hasRun) return "";
   const microNoteEntries = Object.entries(parsedMedicalAdviceMicroNotes).filter(([, note]) => note);
   const hasReminderUpdates = hasParsedReminderUpdates(parsedMedicalAdviceReminderUpdates);
-  if (!parsedResults.length && !microNoteEntries.length && !hasReminderUpdates) {
+  const hasContext = Boolean(parsedMedicalAdviceContext?.detectedContext);
+  if (!parsedResults.length && !microNoteEntries.length && !hasReminderUpdates && !hasContext) {
     return `<p class="empty">未识别到明确的营养素限制。你可以手动设置需要限制的项目。</p>`;
   }
   return `
     <div class="parsed-advice-preview">
       <h3>解析结果预览</h3>
+      ${renderMedicalContextPreview(parsedMedicalAdviceContext, Boolean(parsedResults.length || microNoteEntries.length || hasReminderUpdates))}
       ${parsedResults.length ? `
         <div class="parsed-advice-table">
           <div class="parsed-advice-head">营养素</div>
@@ -2237,10 +2293,18 @@ function renderParsedAdvicePreview(parsedResults, hasRun = true) {
   `;
 }
 
+function renderMedicalContextPreview(context, hasRestrictionItems) {
+  if (context?.detectedContext) {
+    return `<div class="micro-note-preview"><strong>识别结果：</strong><p class="hint">相关场景：${escapeHTML(context.detectedContext)}</p></div>`;
+  }
+  return `<div class="micro-note-preview"><strong>识别结果：</strong><p class="hint">已识别饮食限制项</p><p class="hint">未识别到具体疾病场景</p></div>`;
+}
+
 function applyParsedAdviceToProfile(selectedResults) {
   const hasMicroNotes = Object.values(parsedMedicalAdviceMicroNotes).some(Boolean);
   const hasReminderUpdates = hasParsedReminderUpdates(parsedMedicalAdviceReminderUpdates);
-  if (!selectedResults.length && !hasMicroNotes && !hasReminderUpdates) {
+  const hasContext = Boolean(parsedMedicalAdviceContext?.detectedContext);
+  if (!selectedResults.length && !hasMicroNotes && !hasReminderUpdates && !hasContext) {
     alert("请至少勾选一个解析结果。");
     return;
   }
@@ -2265,6 +2329,7 @@ function applyParsedAdviceToProfile(selectedResults) {
     };
   });
   profile.doctorAdviceNote = medicalAdviceInputText.trim();
+  profile.context = parsedMedicalAdviceContext || profile.context;
   profile.microNutrientNotes = {
     ...profile.microNutrientNotes,
     ...parsedMedicalAdviceMicroNotes
@@ -2274,6 +2339,7 @@ function applyParsedAdviceToProfile(selectedResults) {
   parsedMedicalAdviceResults = [];
   parsedMedicalAdviceMicroNotes = {};
   parsedMedicalAdviceReminderUpdates = null;
+  parsedMedicalAdviceContext = null;
   medicalAdviceParserHasRun = false;
   saveData();
   renderAll();
@@ -2472,12 +2538,14 @@ function renderIngredientSelector() {
         <div class="form-field">
           <label for="medicalIngredientCategory">菜品分类</label>
           <select id="medicalIngredientCategory">
+            <option value="" ${selectedMedicalIngredientCategory ? "" : "selected"}>请选择分类</option>
             ${Object.entries(medicalSelectorCategoryLabels).map(([key, label]) => `<option value="${key}" ${selectedMedicalIngredientCategory === key ? "selected" : ""}>${label}</option>`).join("")}
           </select>
         </div>
         <div class="form-field">
           <label for="medicalIngredientSelect">具体食材</label>
-          <select id="medicalIngredientSelect">
+          <select id="medicalIngredientSelect" ${selectedMedicalIngredientCategory ? "" : "disabled"}>
+            <option value="">${selectedMedicalIngredientCategory ? "请选择食材" : "请先选择分类"}</option>
             ${getIngredientsByCategory(selectedMedicalIngredientCategory).map((ingredient) => `<option value="${ingredient.id}" ${selectedMedicalIngredientId === ingredient.id ? "selected" : ""}>${ingredient.name}</option>`).join("")}
           </select>
         </div>
@@ -2492,7 +2560,7 @@ function bindIngredientSelector() {
   if (categorySelect) {
     categorySelect.addEventListener("change", (event) => {
       selectedMedicalIngredientCategory = event.target.value;
-      selectedMedicalIngredientId = getIngredientsByCategory(selectedMedicalIngredientCategory)[0]?.id || "";
+      selectedMedicalIngredientId = "";
       selectedMealTemplateId = "";
       selectedMedicalVariantId = "";
       visibleMealTemplateIds = [];
@@ -2519,15 +2587,25 @@ function getIngredientsByCategory(category) {
 }
 
 function getSelectedMedicalIngredient() {
+  if (!selectedMedicalIngredientId) return null;
   const selected = ingredientNutritionProfiles.find((ingredient) => ingredient.id === selectedMedicalIngredientId);
   if (selected && isMedicalSelectableIngredientName(selected.name)) return selected;
-  return getIngredientsByCategory(selectedMedicalIngredientCategory)[0] || getIngredientsByCategory("meat")[0];
+  return null;
 }
 
 function renderSelectedIngredient() {
   const target = document.getElementById("selectedMedicalIngredient");
   const ingredient = getSelectedMedicalIngredient();
-  if (!target || !ingredient) return;
+  if (!target) return;
+  if (!ingredient) {
+    target.innerHTML = `
+      <section class="medical-side-section compact-risk-card">
+        <h3>当前食材风险</h3>
+        <p class="empty">请选择食材后查看风险提醒。</p>
+      </section>
+    `;
+    return;
+  }
   target.innerHTML = `
     <div class="selected-ingredient-card compact-risk-card">
       <h3>${ingredient.name}</h3>
@@ -2654,7 +2732,21 @@ function riskLevelText(level) {
 function renderIngredientNutritionPreview() {
   const target = document.getElementById("medicalPortionCalculator");
   const ingredient = getSelectedMedicalIngredient();
-  if (!target || !ingredient) return;
+  if (!target) return;
+  if (!ingredient) {
+    target.innerHTML = `
+      <section class="medical-section">
+        <div class="section-heading compact-heading">
+          <div>
+            <p class="eyebrow">食物重量计算</p>
+            <h3>食物重量计算</h3>
+          </div>
+        </div>
+        <p class="empty">请选择食材并输入重量后估算。</p>
+      </section>
+    `;
+    return;
+  }
   const variants = medicalIngredientVariants[ingredient.name] || [];
   const selectedVariant = getSelectedMedicalVariant(ingredient);
   target.innerHTML = `
@@ -3184,7 +3276,21 @@ function shuffleMealSuggestions() {
 function renderMealSuggestionCards() {
   const target = document.getElementById("medicalMealSuggestions");
   const ingredient = getSelectedMedicalIngredient();
-  if (!target || !ingredient) return;
+  if (!target) return;
+  if (!ingredient) {
+    target.innerHTML = `
+      <section class="medical-section">
+        <div class="section-heading compact-heading">
+          <div>
+            <p class="eyebrow">搭配建议</p>
+            <h3>可考虑菜品</h3>
+          </div>
+        </div>
+        <p class="empty">选择食材后，将显示可考虑菜品。</p>
+      </section>
+    `;
+    return;
+  }
   if (isStapleIngredient(ingredient)) {
     selectedMealTemplateId = "";
     target.innerHTML = `
@@ -3245,7 +3351,21 @@ function renderMealTemplateDetail() {
   const target = document.getElementById("medicalMealDetail");
   if (!target) return;
   const ingredient = getSelectedMedicalIngredient();
-  if (!ingredient) return;
+  if (!ingredient) {
+    target.innerHTML = `
+      <section class="medical-section">
+        <div class="section-heading compact-heading">
+          <div>
+            <p class="eyebrow">记录方式</p>
+            <h3>菜品方案 / 单食材记录</h3>
+          </div>
+        </div>
+        <p class="entry-meta"><strong>当前记录方式：</strong>未选择食材</p>
+        <p class="empty">请选择食材并输入重量后估算。</p>
+      </section>
+    `;
+    return;
+  }
   if (isStapleIngredient(ingredient)) {
     const errors = getMedicalDraftValidationErrors(null, ingredient);
     const entry = errors.length ? null : buildSingleIngredientEntry(ingredient, medicalDraft);
@@ -4407,15 +4527,17 @@ function getRemainingNutrientAdvice(key, remaining, limit) {
 
 function renderKidneyDietReminders() {
   const labels = getEnabledMedicalReminderLabels();
+  const context = data.medicalDietProfile?.context?.detectedContext;
   return `
     <section class="medical-side-section kidney-reminder-panel">
       <div class="section-heading compact-heading">
         <div>
-          <p class="eyebrow">CKD 提醒</p>
-          <h3>肾病饮食提醒</h3>
+          <p class="eyebrow">医嘱提醒</p>
+          <h3>饮食限制提醒</h3>
         </div>
       </div>
-      ${labels.length ? `<p class="kidney-reminder-line">${labels.map(escapeHTML).join("｜")}</p>` : `<p class="empty compact-empty">未启用钠、钾、磷等提醒项。</p>`}
+      ${context ? `<p class="hint">根据你粘贴的医嘱文本，识别到：${escapeHTML(context)}</p>` : ""}
+      ${labels.length ? `<p class="kidney-reminder-line">${labels.map(escapeHTML).join("｜")}</p>` : `<p class="empty compact-empty">尚未启用饮食提醒。<br>粘贴医嘱后，系统会辅助识别低盐、钾、磷、控糖、限水等提醒项。</p>`}
     </section>
   `;
 }
@@ -4685,6 +4807,7 @@ function renderNextMealAdvice(date) {
 
 function buildTodayMedicalAdvice(date) {
   const progress = calculateMedicalDietProgress(date);
+  if (!getMedicalDietEntries(date).length && !Object.keys(progress).length) return "设置限制或加入记录后显示。";
   const protein = progress.protein;
   const carbs = progress.carbs;
   const fat = progress.fat;
