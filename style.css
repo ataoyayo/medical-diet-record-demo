@@ -1,0 +1,1481 @@
+:root {
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --surface-soft: #f8faf8;
+  --text: #202521;
+  --muted: #66736a;
+  --line: #dfe5dd;
+  --primary: #236d55;
+  --primary-dark: #194f3f;
+  --accent: #d77a28;
+  --danger: #b64b3a;
+  --ok: #28734a;
+  --shadow: 0 10px 24px rgba(29, 42, 35, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+.file-btn {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #fff;
+  background: var(--primary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ghost-link {
+  min-height: 44px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: var(--primary);
+  background: #e8f1ec;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.ghost-link:hover {
+  color: #fff;
+  background: var(--primary-dark);
+}
+
+button:hover,
+.file-btn:hover {
+  background: var(--primary-dark);
+}
+
+.ghost-btn {
+  color: var(--primary);
+  background: #e8f1ec;
+}
+
+.ghost-btn:hover {
+  color: #fff;
+}
+
+.danger-ghost-btn {
+  color: var(--danger);
+  background: #f5e8e4;
+}
+
+.danger-ghost-btn:hover,
+.delete-btn:hover {
+  color: #fff;
+  background: var(--danger);
+}
+
+.delete-btn {
+  color: var(--danger);
+  background: #f7ebe8;
+}
+
+.app-header {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 18px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: 30px;
+}
+
+h2 {
+  font-size: 20px;
+}
+
+h3 {
+  font-size: 17px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.app-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 18px 36px;
+}
+
+.app-footer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 18px 28px;
+  text-align: center;
+}
+
+.app-footer a {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  color: var(--primary);
+}
+
+.admin-grid {
+  margin: 18px 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.medical-diet-mode .layout-grid {
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+  gap: 16px;
+}
+
+.medical-diet-mode #dashboard {
+  display: grid;
+  gap: 10px;
+}
+
+.main-column,
+.side-column {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.profile-form,
+.manual-form,
+.date-tools,
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.form-field {
+  display: grid;
+  gap: 6px;
+}
+
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+.date-tools {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto;
+  align-items: end;
+  margin-bottom: 14px;
+}
+
+.record-date-panel {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.record-date-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.record-date-heading h3 {
+  margin: 0;
+}
+
+.record-date-heading strong {
+  white-space: nowrap;
+}
+
+.simplified-date-tools {
+  grid-template-columns: minmax(180px, 1fr) auto auto;
+  margin-bottom: 0;
+}
+
+.medical-date-tools {
+  grid-template-columns: 1fr;
+  margin-bottom: 0;
+}
+
+.date-picker-anchor {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  width: fit-content;
+}
+
+.date-picker-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  width: 292px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px rgba(22, 34, 51, 0.16);
+}
+
+.date-picker-header,
+.date-picker-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.date-picker-header {
+  margin-bottom: 10px;
+}
+
+.icon-btn {
+  width: 34px;
+  min-width: 34px;
+  padding: 8px;
+}
+
+.icon-btn:disabled,
+.calendar-day:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.calendar-day {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+  color: var(--text);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.calendar-day:not(:disabled):hover {
+  border-color: var(--primary);
+}
+
+.calendar-day.selected {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.empty-day {
+  min-width: 34px;
+  height: 34px;
+}
+
+.date-picker-actions {
+  margin-top: 12px;
+}
+
+.compact-date-tools {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-bottom: 0;
+}
+
+.date-action-field button {
+  width: 100%;
+}
+
+.new-day-panel {
+  margin-bottom: 14px;
+  padding: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.mode-switcher {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.mode-btn {
+  color: var(--text);
+  background: #eef2ef;
+}
+
+.mode-btn.active {
+  color: #fff;
+  background: var(--primary);
+}
+
+label {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--text);
+}
+
+textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.target-grid,
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.day-status-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.status-option {
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.status-option.active {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.status-option input {
+  width: auto;
+  min-height: auto;
+}
+
+.stat {
+  padding: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.stat span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.stat strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 20px;
+}
+
+.stat p,
+.field-hint {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.warning {
+  margin: 12px 0 0;
+  color: #8a4b00;
+  background: #fff4df;
+  border: 1px solid #f0d5a5;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.entry-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tab-btn {
+  color: var(--text);
+  background: #eef2ef;
+}
+
+.tab-btn.active {
+  color: #fff;
+  background: var(--primary);
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ingredient-tools {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.module-note {
+  margin: 0;
+  padding: 12px;
+  color: var(--muted);
+  background: #f3f8f5;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.template-btn {
+  min-height: 68px;
+  align-items: flex-start;
+  flex-direction: column;
+  color: var(--text);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+}
+
+.template-btn:hover,
+.template-btn.active {
+  color: var(--text);
+  background: #e8f1ec;
+}
+
+.template-btn small {
+  color: var(--muted);
+}
+
+.estimate-box,
+.manual-box,
+.exercise-box {
+  margin-top: 16px;
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.medical-mode,
+.medical-section {
+  display: grid;
+  gap: 10px;
+}
+
+.medical-section {
+  padding: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+
+.medical-status-summary,
+.record-mode-status,
+.expected-impact-box,
+.add-composition-box,
+.impact-line {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.medical-status-summary {
+  margin: 10px 0 0;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.record-mode-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  color: var(--text);
+}
+
+.record-mode-status span {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.expected-impact-box,
+.add-composition-box {
+  display: grid;
+  gap: 4px;
+}
+
+.expected-impact-box p,
+.add-composition-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.impact-line {
+  margin-top: 8px;
+  background: #f8fafc;
+}
+
+.medical-settings-form {
+  display: grid;
+  gap: 8px;
+}
+
+.medical-advice-parser {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.medical-advice-input {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.parser-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.parsed-advice-preview {
+  display: grid;
+  gap: 12px;
+}
+
+.parsed-advice-table {
+  display: grid;
+  grid-template-columns: 72px 88px 88px 56px minmax(220px, 1fr) 90px;
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--line);
+}
+
+.parsed-advice-table > div,
+.parsed-advice-table > label {
+  margin: 0;
+  padding: 8px;
+  background: #fff;
+}
+
+.parsed-advice-head {
+  font-weight: 700;
+  background: var(--surface-soft) !important;
+}
+
+.parsed-note {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.compact-check {
+  align-items: center;
+}
+
+.medical-restriction-row {
+  display: grid;
+  grid-template-columns: 64px minmax(104px, 0.8fr) minmax(98px, 0.75fr) 34px minmax(120px, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.medical-progress-panel {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.current-medical-records,
+.medical-side-section {
+  display: grid;
+  gap: 10px;
+}
+
+.medical-side-section {
+  padding: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.medical-top-progress {
+  padding: 10px 12px;
+}
+
+.nutrition-progress-item {
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.progress-list {
+  display: grid;
+  gap: 8px;
+}
+
+.medical-diet-mode #dashboard .progress-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.progress-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.progress-track {
+  height: 6px;
+  overflow: hidden;
+  background: #e7ece8;
+  border-radius: 999px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.progress-fill.green {
+  background: #2f8a5d;
+}
+
+.progress-fill.yellow {
+  background: linear-gradient(90deg, #2f8a5d, #d5a928);
+}
+
+.progress-fill.orange-red {
+  background: linear-gradient(90deg, #d5a928, #c96a3a);
+}
+
+.progress-fill.red {
+  background: var(--danger);
+}
+
+.selected-ingredient-card,
+.impact-box,
+.nutrition-preview {
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.nutrition-cell {
+  padding: 8px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.nutrition-cell span,
+.nutrition-cell p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.nutrition-cell strong {
+  display: block;
+  margin-top: 4px;
+}
+
+.meal-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.meal-suggestion-card {
+  min-height: 92px;
+  padding: 10px;
+  align-items: flex-start;
+  flex-direction: column;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.small-btn {
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.meal-suggestion-card.active,
+.meal-suggestion-card:hover {
+  color: var(--text);
+  background: #e8f1ec;
+}
+
+.meal-image-placeholder {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #236d55, #d77a28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.compact-heading {
+  margin-bottom: 8px;
+}
+
+.medical-settings-summary {
+  padding: 10px 12px;
+}
+
+.medical-settings-summary .section-heading {
+  margin-bottom: 4px;
+}
+
+.medical-section h3,
+.medical-side-section h3 {
+  font-size: 16px;
+}
+
+.medical-disclaimer {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.medical-disclaimer p {
+  margin: 6px 0 0;
+}
+
+.risk-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.risk-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 8px;
+  color: var(--text);
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.risk-pill.micro {
+  background: #fff5e8;
+}
+
+.compact-nutrition-preview {
+  display: grid;
+  gap: 8px;
+}
+
+.compact-list {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.macro-line {
+  line-height: 1.5;
+}
+
+.exercise-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.addon-block,
+.custom-addon-block {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.check-option {
+  min-height: 44px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.check-option input {
+  width: auto;
+  min-height: auto;
+}
+
+.macro-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.summary-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 420px;
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+th {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.advice-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.advice-item {
+  padding: 10px 12px;
+  background: #f3f8f5;
+  border-left: 4px solid var(--primary);
+  border-radius: 6px;
+}
+
+.entries-list {
+  display: grid;
+  gap: 12px;
+}
+
+.daily-list {
+  display: grid;
+  gap: 12px;
+}
+
+.daily-card {
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.daily-card.expanded {
+  background: #fff;
+}
+
+.daily-card.current-date-card {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px rgba(47, 107, 255, 0.12);
+}
+
+.daily-card-header,
+.daily-card-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.daily-card-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.daily-details {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.daily-section {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.entry-card {
+  padding: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.entry-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.entry-impact-list {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.entry-impact-title {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.entry-impact-row {
+  display: grid;
+  grid-template-columns: 64px minmax(48px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.entry-impact-row strong {
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.entry-impact-bar {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.entry-impact-fill {
+  width: var(--impact-width);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.entry-impact-fill.warning {
+  background: var(--accent);
+}
+
+.entry-impact-fill.danger {
+  background: var(--danger);
+}
+
+.entry-risk-note {
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.medical-settings-available {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.entry-meta {
+  color: var(--muted);
+  margin: 4px 0 8px;
+}
+
+.settings-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.file-btn input {
+  display: none;
+}
+
+.message {
+  min-height: 22px;
+  margin: 0;
+  color: var(--primary);
+}
+
+.message.error {
+  color: var(--danger);
+}
+
+.hint,
+.empty {
+  color: var(--muted);
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.noscript-notice {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: var(--surface-soft);
+}
+
+@media (max-width: 860px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .medical-diet-mode .layout-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .medical-diet-mode .main-column,
+  .medical-diet-mode .side-column,
+  .medical-diet-mode .card {
+    min-width: 0;
+  }
+
+  .entry-tabs,
+  .target-grid,
+  .day-status-panel,
+  .date-tools,
+  .compact-date-tools,
+  .simplified-date-tools,
+  .medical-date-tools,
+  .nutrition-grid,
+  .meal-card-grid,
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .date-picker-popover {
+    width: min(292px, calc(100vw - 48px));
+  }
+
+  .medical-restriction-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .parsed-advice-table {
+    grid-template-columns: 1fr;
+  }
+
+  .parsed-advice-head {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .section-heading,
+  .daily-card-header,
+  .daily-card-actions,
+  .entry-card header,
+  .record-date-heading {
+    flex-direction: column;
+  }
+
+  .profile-form,
+  .manual-form,
+  .exercise-form,
+  .date-tools,
+  .compact-date-tools,
+  .simplified-date-tools,
+  .medical-date-tools,
+  .control-grid,
+  .entry-tabs,
+  .template-grid,
+  .checkbox-grid,
+  .target-grid,
+  .day-status-panel,
+  .medical-restriction-row,
+  .nutrition-grid,
+  .meal-card-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  button,
+  .file-btn {
+    width: 100%;
+  }
+
+  .current-medical-records .entry-card header {
+    flex-direction: row;
+  }
+
+  .current-medical-records .entry-card .delete-btn {
+    width: auto;
+    min-height: 36px;
+    padding: 7px 10px;
+  }
+
+  .medical-diet-mode .oil-option-row .small-btn {
+    width: auto;
+  }
+
+  .entry-impact-row {
+    grid-template-columns: 56px minmax(36px, 1fr) auto;
+    gap: 6px;
+  }
+
+  .entry-impact-row strong {
+    font-size: 11px;
+  }
+}
+
+.kidney-reminder-line {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff8ed;
+  font-weight: 800;
+}
+
+.medical-reminder-settings,
+.extra-reminder-settings {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.reminder-option-grid {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.7fr) minmax(160px, 1.3fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.reminder-check {
+  margin: 0;
+}
+
+.oil-estimate-box {
+  display: grid;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.oil-estimate-summary {
+  color: var(--text);
+}
+
+.oil-option-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.oil-option-row .active,
+.archive-range-tabs .active {
+  background: #e8f1ec;
+  border-color: var(--accent);
+}
+
+.compact-oil-input {
+  max-width: 160px;
+}
+
+.medical-archive-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(15, 23, 42, 0.2);
+}
+
+.medical-archive-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 31;
+  width: min(420px, 92vw);
+  height: 100vh;
+  overflow-y: auto;
+  padding: 18px;
+  background: #fff;
+  box-shadow: -16px 0 36px rgba(15, 23, 42, 0.18);
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.archive-drawer-header,
+.archive-range-tabs,
+.archive-main-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+
+.archive-range-tabs {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.archive-date-list,
+.archive-detail-view {
+  display: grid;
+  gap: 10px;
+}
+
+.archive-date-card,
+.archive-entry-card,
+.archive-detail-section {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+.archive-date-card span,
+.archive-entry-card p,
+.archive-detail-section p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.archive-status {
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-style: normal;
+  font-size: 12px;
+  background: #ecfdf5;
+  color: #166534;
+}
+
+.archive-status.near {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.archive-status.over {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.archive-main-btn {
+  width: 100%;
+}
+
+.public-beta-notes {
+  display: grid;
+  gap: 8px;
+}
+
+@media (max-width: 760px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .medical-mode,
+  .current-medical-records {
+    grid-template-columns: 1fr;
+  }
+
+  .current-medical-records > * {
+    min-width: 0;
+  }
+
+  .current-medical-records .medical-side-section > *,
+  .current-medical-records .entries-list > * {
+    min-width: 0;
+  }
+
+  .medical-archive-drawer {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    padding: 14px;
+    padding-bottom: 82px;
+  }
+
+  .archive-drawer-header,
+  .reminder-option-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .archive-drawer-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding-bottom: 10px;
+    background: #fff;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .archive-main-btn {
+    position: sticky;
+    bottom: 0;
+    min-height: 44px;
+  }
+
+  .archive-detail-view {
+    overflow-y: auto;
+  }
+
+  .meal-card-grid,
+  .nutrition-grid,
+  .stats-grid,
+  .control-grid {
+    grid-template-columns: 1fr;
+  }
+
+  button,
+  .ghost-btn,
+  .small-btn,
+  input,
+  select {
+    min-height: 44px;
+  }
+}

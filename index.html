@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>医嘱限制饮食记录 Demo</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">本地估算工具</p>
+      <h1>轻量身材管家</h1>
+    </div>
+    <button id="editProfileBtn" class="ghost-btn" type="button">编辑资料</button>
+  </header>
+
+  <main id="app" class="app-shell">
+    <noscript><p class="noscript-notice">本工具需要启用 JavaScript 才能使用。</p></noscript>
+    <section id="profileSection" class="screen"></section>
+
+    <section id="mainSection" class="screen hidden">
+      <div class="layout-grid">
+        <div class="main-column">
+          <section class="card" aria-labelledby="dashboardTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow" id="todayDate"></p>
+                <h2 id="dashboardTitle">个人目标概览</h2>
+              </div>
+            </div>
+            <div id="dashboard"></div>
+            <div id="exerciseModule"></div>
+          </section>
+
+          <section class="card" aria-labelledby="entryTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">低摩擦记录</p>
+                <h2 id="entryTitle">饮食记录入口</h2>
+              </div>
+            </div>
+            <div id="entryTabs" class="entry-tabs"></div>
+            <div id="templatePanel"></div>
+            <div id="estimatePanel"></div>
+          </section>
+        </div>
+
+        <aside class="side-column">
+          <section class="card" aria-labelledby="dailyStatsTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">按日期收纳</p>
+                <h2 id="dailyStatsTitle">每日统计</h2>
+              </div>
+            </div>
+            <div id="dailyStats"></div>
+          </section>
+
+          <section id="settingsCard" class="card" aria-labelledby="settingsTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">本地保存</p>
+                <h2 id="settingsTitle">设置 / 导入导出</h2>
+              </div>
+            </div>
+            <div class="settings-actions">
+              <button id="exportBtn" type="button">导出全部数据 JSON</button>
+              <label class="file-btn">
+                导入 JSON 覆盖当前数据
+                <input id="importInput" type="file" accept="application/json">
+              </label>
+              <p id="importMessage" class="message" role="status"></p>
+              <p class="hint">数据仅保存在本机浏览器 localStorage。本工具用于饮食估算，不是医疗工具。</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <a href="./admin.html">数据面板</a>
+  </footer>
+
+  <script src="./app.js?v=20260710-v3-ckd-oil-archive"></script>
+</body>
+</html>
